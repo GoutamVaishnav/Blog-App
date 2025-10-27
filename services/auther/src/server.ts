@@ -1,7 +1,14 @@
 import express from "express";
 import dotenv from "dotenv";
 import { sql } from "./utils/db";
+import blogroutes from "./routes/blog";
+import { v2 as cloudinary } from "cloudinary";
 dotenv.config();
+cloudinary.config({
+  cloud_name: process.env.Cloud_Name,
+  api_key: process.env.Cloud_Api_Key,
+  api_secret: process.env.Cloud_Api_Secret,
+});
 const app = express();
 const port = process.env.PORT;
 
@@ -39,6 +46,8 @@ async function initDB() {
     console.log("Error initDB : ", error);
   }
 }
+
+app.use("/api/v1", blogroutes);
 
 initDB().then(() => {
   app.listen(port, () => {
