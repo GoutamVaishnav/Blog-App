@@ -26,3 +26,28 @@ Thumbs.db
 
 # TypeScript cache
 *.tsbuildinfo
+
+
+# Next.js cache
+.next/cache/
+
+# Coverage reports
+coverage/
+
+# Turbo / Vercel
+.vercel/
+.turbo/
+
+# ESLint cache
+.eslintcache
+
+# Parcel / other bundlers
+.cache/
+
+# Temporary files
+*.log
+*.tmp
+*.swp
+
+# Env example (optional, keep only template)
+!.env.example
