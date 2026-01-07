@@ -77,20 +77,21 @@ import {
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useAppData, user_service } from "@/context/AppContext";
+import { User } from "@/context/AppContext";
+
 import toast from "react-hot-toast";
 import { useGoogleLogin } from "@react-oauth/google";
 import { redirect } from "next/dist/client/components/navigation";
 import Loadingg from "@/components/Loadingg";
 
-
 interface LoginResponse {
-  user: any;
+  user: User;
   message: string;
   token: string;
 }
 
 const LoginPage = () => {
-  const {  setUser, isauth, loading, setLoading, setIsauth } = useAppData();
+  const { setUser, isauth, loading, setLoading, setIsauth } = useAppData();
 
   if (isauth) {
     return redirect("/");
@@ -107,7 +108,7 @@ const LoginPage = () => {
 
       Cookies.set("token", result.data.token, {
         expires: 7,
-        secure: true,
+        secure: process.env.NODE_ENV === "production",
         path: "/",
       });
 

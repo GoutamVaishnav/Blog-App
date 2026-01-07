@@ -21,17 +21,19 @@ export const loginUser = TryCatch(async (req, res) => {
   );
 
   const { email, name, picture } = userRes.data;
+  console.log("PICTURE VALUE 👉", picture);
   let user = await User.findOne({ email });
   if (!user) {
     user = await User.create({
       email,
       name,
-      picture,
+      image: picture,
     });
   }
-  const token = jwt.sign({ user }, process.env.JWT_SEC as string, {
+  const token = jwt.sign({ userId: user._id }, process.env.JWT_SEC as string, {
     expiresIn: "5d",
   });
+
   res.status(200).json({
     message: "Login successfully",
     token,
