@@ -25,14 +25,18 @@ export const isAuth = async (
       token,
       process.env.JWT_SEC as string
     ) as JwtPayload; // decodeValue me user id hoti hai
-    if (!decodeValue || !decodeValue.userId) {
+    if (!decodeValue || !decodeValue.user) {
       res.status(401).json({
         message: "Invalid Token",
       });
       return;
     }
-    const user = await User.findById(decodeValue.userId);
-    req.user = user;
+
+    // Token se hi user mil jayega, DB call ki zarurat nahi
+    req.user = decodeValue.user as IUser;
+
+    // const user = await User.findById(decodeValue.userId);
+    // req.user = user;
 
     next();
   } catch (error) {

@@ -180,7 +180,7 @@ const ProfilePage = () => {
             </div>
             <div className="flex flex-col sm:flex-row gap-2 mt-6 w-full justify-center">
               <Button onClick={logoutHandler}>Logout</Button>
-              <Button>Add Blog</Button>
+              <Button onClick={() => router.push("/blog/new")}>Add Blog</Button>
 
               <Dialog open={Open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
@@ -188,7 +188,7 @@ const ProfilePage = () => {
                 </DialogTrigger>
                 {/* Dialog Content for editing profile would go here */}
 
-                <DialogContent className="sm:max-w-[500px]">
+                <DialogContent className="sm:max-w-125">
                   <DialogHeader>
                     <DialogTitle>Edit profile</DialogTitle>
                     <DialogDescription>

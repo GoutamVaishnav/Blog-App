@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
 interface IUser extends Document {
-    _id:string
+  _id: string;
   name: string;
   email: string;
   image: string;
@@ -41,7 +41,7 @@ export const isAuth = async (
       return;
     }
 
-    req.user = decodeValue.user;
+    req.user = decodeValue.user as IUser;
     next();
   } catch (error) {
     console.log("jwt verification error: ", error);

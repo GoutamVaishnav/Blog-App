@@ -30,7 +30,7 @@ export const loginUser = TryCatch(async (req, res) => {
       image: picture,
     });
   }
-  const token = jwt.sign({ userId: user._id }, process.env.JWT_SEC as string, {
+  const token = jwt.sign({ user}, process.env.JWT_SEC as string, {
     expiresIn: "5d",
   });
 
