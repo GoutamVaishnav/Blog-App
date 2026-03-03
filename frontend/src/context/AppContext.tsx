@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
@@ -10,6 +10,7 @@ export const author_service = "http://localhost:5001";
 export const blog_service = "http://localhost:5002";
 
 export interface User {
+  _id: string;
   name: string;
   email: string;
   image: string;
@@ -20,14 +21,22 @@ export interface User {
 }
 export interface Blog {
   id: string;
-  name: string;
+  title: string;
   description: string;
   blogcontent: string;
   image: string;
   category: string;
   author: string;
-  created_at: string;
+  create_at: string;
 }
+
+interface SavedBlogType {
+  id: string;
+  userid: string;
+  blogid: string;
+  create_at: string;
+}
+
 interface AppContextType {
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
@@ -35,7 +44,16 @@ interface AppContextType {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   isauth: boolean;
   setIsauth: React.Dispatch<React.SetStateAction<boolean>>;
-  logoutUser : () => Promise<void>;
+  logoutUser: () => Promise<void>;
+  blogs: Blog[];
+  blogLoading: boolean;
+  category: string;
+  setCategory: React.Dispatch<React.SetStateAction<string>>;
+  searchQuery: string;
+  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
+  fetchBlogs: () => Promise<void>;
+  savedBlogs: SavedBlogType[] | null;
+  getSavedBlogs: () => Promise<void>;
 }
 
 const AppContext = React.createContext<AppContextType | undefined>(undefined);
@@ -69,6 +87,46 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     }
   }
 
+  ///fetch  blogs
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [blogLoading, setBlogLoading] = useState(true);
+  const [category, setCategory] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  async function fetchBlogs() {
+    setBlogLoading(true);
+    try {
+      const { data } = await axios.get<{ message: string; blogs: Blog[] }>(
+        `${blog_service}/api/v1/blogs/all?category=${category}&searchQuery=${searchQuery}`,
+      );
+      // console.log(data);
+      setBlogs(data.blogs || []);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setBlogLoading(false);
+    }
+  }
+
+  const [savedBlogs, setSavedBlogs] = useState<SavedBlogType[] | null>(null);
+
+  async function getSavedBlogs() {
+    const token = Cookies.get("token");
+    try {
+      const { data } = await axios.get<any>(
+        `${blog_service}/api/v1/blog/saved/all`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      setSavedBlogs(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async function logoutUser() {
     Cookies.remove("token");
     setUser(null);
@@ -79,10 +137,33 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   useEffect(() => {
     fetchUser();
+    fetchBlogs();
+    getSavedBlogs();
   }, []);
+
+  useEffect(() => {
+    fetchBlogs();
+  }, [category, searchQuery]);
   return (
     <AppContext.Provider
-      value={{ user, setUser, loading, setLoading, isauth, setIsauth, logoutUser }}
+      value={{
+        user,
+        setUser,
+        loading,
+        setLoading,
+        isauth,
+        setIsauth,
+        logoutUser,
+        blogs,
+        blogLoading,
+        searchQuery,
+        setSearchQuery,
+        category,
+        setCategory,
+        fetchBlogs,
+        savedBlogs,
+        getSavedBlogs,
+      }}
     >
       <GoogleOAuthProvider clientId="350967861092-j1srrfa5e9rkuv1atoa8aeqn3gr32c8d.apps.googleusercontent.com">
         {" "}

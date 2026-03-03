@@ -12,7 +12,7 @@ const Navbar = () => {
   const { loading, isauth } = useAppData();
 
   return (
-    <nav className="bg-white shadow-md p-4 z-50">
+    <nav className="bg-linear-to-r from-amber-500 to-amber-100 shadow-md p-4 z-50">
       <div className="container mx-auto flex justify-between items-center">
         <Link href={"/blogs"} className="text-xl font-bold text-gray-900">
           The Reading Retreat
@@ -25,7 +25,7 @@ const Navbar = () => {
         </div>
         <ul className="hidden md:flex justify-center items-center space-x-6 text-gray-700">
           <li>
-            <Link href={"/"} className="hover:text-blue-500">
+            <Link href={"/blogs"} className="hover:text-blue-500">
               Home
             </Link>
           </li>

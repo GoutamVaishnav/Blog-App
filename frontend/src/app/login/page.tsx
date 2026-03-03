@@ -94,7 +94,7 @@ const LoginPage = () => {
   const { setUser, isauth, loading, setLoading, setIsauth } = useAppData();
 
   if (isauth) {
-    return redirect("/");
+    return redirect("/blogs");
   }
   const responseGoogle = async (authResult: any) => {
     setLoading(true);

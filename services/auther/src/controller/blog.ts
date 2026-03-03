@@ -6,7 +6,7 @@ import { TryCatch } from "../utils/TryCatch";
 import { v2 as cloudinary } from "cloudinary";
 import { invalidareCacheJob } from "../utils/rabbitmq";
 import { GoogleGenAI } from "@google/genai";
-import {GoogleGenerativeAI} from "@google/generative-ai"
+import { GoogleGenerativeAI } from "@google/generative-ai";
 export const createBlog = TryCatch(async (req: AuthenticatedRequest, res) => {
   console.log("CREATE BLOG API HIT");
 
@@ -190,7 +190,6 @@ grammar in the following blog description and return only the corrected sentence
 
   res.json(result);
 });
-
 
 /////ai conteny
 
