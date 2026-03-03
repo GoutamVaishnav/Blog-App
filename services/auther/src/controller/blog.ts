@@ -32,7 +32,9 @@ export const createBlog = TryCatch(async (req: AuthenticatedRequest, res) => {
   const result =
     await sql`INSERT INTO blogs (title, description, image,blogcontent, category,author) VALUES (${title}, ${description}, ${cloud.secure_url}, ${blogcontent}, ${category}, ${req.user?._id}) RETURNING *`;
 
-  await invalidareCacheJob([`blogs:*`]);
+  // await invalidareCacheJob([`blogs:*`]);
+  await invalidareCacheJob(["blogs:all", `blog:${result[0].id}`]);
+  console.log("Sending cache invalidation message...");
   res.json({
     messsage: "Blog create successfully",
     blog: result[0],
@@ -79,8 +81,7 @@ export const updateBlog = TryCatch(async (req: AuthenticatedRequest, res) => {
   }, blogcontent=${blogcontent || blog[0].blogcontent}, category=${
     category || blog[0].category
   } WHERE id=${id} RETURNING *`;
-
-  await invalidareCacheJob([`blogs:*`, `blog:${id}`]);
+  await invalidareCacheJob(["blogs:all", `blog:${updatedBlog[0].id}`]);
   res.json({
     message: "Blog updated successfully",
     blog: updatedBlog[0],
@@ -104,7 +105,7 @@ export const deleteBlog = TryCatch(async (req: AuthenticatedRequest, res) => {
   await sql`DELETE FROM savedblogs WHERE blogid=${id}`;
   await sql`DELETE FROM comments WHERE blogid=${id}`;
   await sql`DELETE FROM blogs WHERE id=${id}`;
-  await invalidareCacheJob([`blogs:*`, `blog:${id}`]);
+  await invalidareCacheJob(["blogs:all", `blog:${id}`]);
   res.json({
     message: "Blog deleted successfully",
   });
