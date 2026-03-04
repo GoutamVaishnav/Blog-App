@@ -5,9 +5,9 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-export const user_service = "http://localhost:5000";
-export const author_service = "http://localhost:5001";
-export const blog_service = "http://localhost:5002";
+export const user_service = process.env.NEXT_PUBLIC_USER_SERVICE!;
+export const author_service = process.env.NEXT_PUBLIC_AUTHOR_SERVICE!;
+export const blog_service = process.env.NEXT_PUBLIC_BLOG_SERVICE!;
 
 export interface User {
   _id: string;
